@@ -10,5 +10,13 @@ erl_crash.dump
 .elixir_ls/
 /jido/
 /0001_local/
+/0002_local/
 /agentjido/
 /agentjido/jido/
+
+# Elixir/Erlang build artifacts
+**/_build/
+**/deps/
+**/priv/plts/
+**/.plt
+**/.plt.*
