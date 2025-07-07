@@ -33,10 +33,10 @@ The benefits are quantifiable and significant:
 | Metric | Multi-Package | Single Library | Improvement |
 |--------|--------------|----------------|-------------|
 | Implementation Time | 8 weeks | 4 weeks | 2x faster |
-| Local Operation Performance | 290μs | 5μs | 58x faster |
 | Code Maintenance | 3 packages | 1 package | 3x simpler |
 | Deployment Complexity | High | Low | Significant |
 | Type Safety | Compromised | Full | Complete |
+| Abstraction Layers | Multiple | Minimal | Reduced overhead |
 
 ## Recommended Approach
 
@@ -88,11 +88,11 @@ Separating them is like separating the heart, lungs, and blood vessels—technic
 
 ### 3. Performance
 
-Direct benchmarks show:
-- **58x faster** local operations
-- **3x less memory** usage
-- **Zero serialization** for local calls
-- **Optimized routing** paths
+Architectural improvements include:
+- **Direct function calls** for local operations
+- **Reduced memory allocations** through fewer intermediate structures
+- **No unnecessary serialization** for local calls
+- **Simplified routing** paths
 
 ### 4. Maintainability
 
@@ -169,7 +169,7 @@ The refactor will be considered successful when:
 
 1. **Technical Goals**
    - ✅ Zero dialyzer warnings
-   - ✅ 58x performance improvement verified
+   - ✅ Measurable performance improvements through reduced abstractions
    - ✅ All features restored
    - ✅ Clean architecture
 
@@ -213,7 +213,7 @@ The single library approach enables future enhancements:
 
 The evidence is overwhelming:
 - **Faster implementation** (4 weeks vs 8 weeks)
-- **Better performance** (58x improvement)
+- **Reduced complexity** (fewer abstraction layers and boundaries)
 - **Simpler architecture** (1 package vs 4)
 - **Restored functionality** (bus sensor returns)
 - **Superior developer experience** (single dependency)

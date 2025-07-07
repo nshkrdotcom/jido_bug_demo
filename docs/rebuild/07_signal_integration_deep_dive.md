@@ -57,43 +57,43 @@ This isn't a implementation problem—it's an architecture problem. The bus sens
 
 ## Performance Impact Analysis
 
-### Current: Death by a Thousand Cuts
+### Current: Unnecessary Abstraction Layers
 
 ```elixir
-# Every agent operation incurs overhead:
+# Every agent operation crosses multiple boundaries:
 def execute_action(agent, action) do
-  # 1. Build signal in jido (~50μs)
+  # 1. Build signal in jido
   signal_attrs = build_signal_attrs(agent, action)
   
-  # 2. Cross package boundary to jido_signal (~10μs)
+  # 2. Cross package boundary to jido_signal
   signal = Jido.Signal.new!(signal_attrs)
   
-  # 3. Serialize for dispatch (~100μs for JSON)
+  # 3. Serialize for dispatch (even for local operations)
   serialized = Jido.Signal.Serializer.serialize(signal)
   
-  # 4. Dispatch through abstraction layers (~20μs)
+  # 4. Dispatch through abstraction layers
   Jido.Signal.Dispatch.dispatch(signal, agent.dispatch)
   
-  # 5. Deserialize on receiving end (~100μs)
-  # 6. Cross back to jido for handling (~10μs)
+  # 5. Deserialize on receiving end
+  # 6. Cross back to jido for handling
   
-  # Total overhead: ~290μs per operation
+  # Multiple function calls and data transformations for every operation
 end
 ```
 
-For an agent handling 1000 operations/second, that's 290ms/second of pure overhead—29% CPU waste!
+This creates unnecessary overhead through excessive abstraction and serialization, even for operations that could be handled directly.
 
 ### Integrated: Direct Execution
 
 ```elixir
-# Optimized integrated path:
+# Simplified integrated path:
 def execute_action(agent, action) do
-  # Local execution path - no serialization
+  # Local execution path - no serialization needed
   if local_action?(action) do
-    apply(action, :run, [agent.state])  # ~5μs total
+    apply(action, :run, [agent.state])  # Direct function call
   else
-    # Remote path only when needed
-    emit_remote_signal(agent, action)   # Full overhead
+    # Remote path only when truly needed
+    emit_remote_signal(agent, action)
   end
 end
 ```
@@ -350,14 +350,14 @@ end
 
 ## Quantified Benefits
 
-### Performance Improvements
+### Architectural Improvements
 
-| Operation | Separated | Integrated | Improvement |
-|-----------|-----------|------------|-------------|
-| Local signal dispatch | 290μs | 5μs | 58x faster |
-| Signal creation | 60μs | 10μs | 6x faster |
-| Batch operations | N/A | Supported | ∞ |
-| Memory per signal | 2.4KB | 0.8KB | 3x smaller |
+| Aspect | Separated | Integrated | Benefit |
+|--------|-----------|------------|---------|
+| Function call depth | Multiple package boundaries | Direct calls | Reduced overhead |
+| Serialization requirement | Always, even for local ops | Only when needed | Less data copying |
+| Type safety | String-based coupling | Compile-time types | Fewer runtime errors |
+| Code paths | Complex routing | Optimized paths | Simpler execution |
 
 ### Development Velocity
 
@@ -381,7 +381,7 @@ Total: ~1,100 lines of unnecessary code
 
 The deep integration between agents and signals isn't a design flaw—it's the design. Signals were created specifically for agent communication, and separating them creates:
 
-1. **Performance degradation** (58x slower for local operations)
+1. **Unnecessary overhead** (extra function calls and serialization)
 2. **Lost functionality** (bus sensor disabled)
 3. **Type safety corruption** (string-based coupling)
 4. **Development friction** (cross-package coordination)

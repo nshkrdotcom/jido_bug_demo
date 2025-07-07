@@ -666,7 +666,7 @@ mix jido.migrate
 ## Benefits Realized
 
 1. **Simplicity**: One dependency, one API
-2. **Performance**: 58x faster local operations
+2. **Performance**: Reduced overhead through direct function calls
 3. **Type Safety**: No more string-based coupling
 4. **Features**: Bus sensor and transactions restored
 5. **Debugging**: Single codebase, clear stack traces
