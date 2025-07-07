@@ -22,7 +22,7 @@ This is cohesion by design, not coupling by accident.
 The current partial separation has concrete negative impacts:
 
 - **Broken functionality**: Bus sensor is completely commented out due to circular dependencies
-- **Code duplication**: ~1,500 lines of duplicated code between jido and jido_action
+- **Code duplication**: ~1,500 lines of duplicated code between jido and jido_action (note: this is expected, Action was never removed from Jido)
 - **Type system corruption**: String-based coupling instead of type safety
 - **Performance degradation**: Unnecessary serialization boundaries
 
